@@ -3,48 +3,37 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>2026 一中科學班倒數</title>
+
+<title>科學班倒數</title>
 
 <style>
 
 :root{
---bg:#ffe6f2;
---box:#ffffff;
---text:#ff4fa3;
---progress:#ff4fa3;
-}
-
-body.dark{
---bg:#121212;
---box:#1e1e1e;
---text:#ff9bd1;
---progress:#ff9bd1;
+--bg:#0b0000;
+--box:#1a0000;
+--text:#ff0000;
+--progress:#8b0000;
 }
 
 body{
-background:var(--bg);
+background:radial-gradient(circle,#200000,#000);
 font-family:Arial;
 text-align:center;
+color:var(--text);
 margin:0;
 padding-top:50px;
-transition:0.4s;
 overflow-x:hidden;
 }
 
+/* 標題 */
+
 h1{
-color:var(--text);
 font-size:40px;
+text-shadow:0 0 10px red;
+letter-spacing:3px;
 }
 
-button{
-margin-top:10px;
-padding:8px 15px;
-border:none;
-border-radius:10px;
-background:var(--text);
-color:white;
-cursor:pointer;
-}
+/* 四格 */
 
 .grid{
 
@@ -59,24 +48,24 @@ margin:40px auto;
 .box{
 
 background:var(--box);
-border-radius:20px;
+border:2px solid #300000;
+border-radius:10px;
 padding:25px;
-box-shadow:0 8px 20px rgba(0,0,0,0.15);
+box-shadow:0 0 20px rgba(255,0,0,0.3);
 
 }
 
 .number{
 
-font-size:36px;
+font-size:38px;
 font-weight:bold;
-color:var(--text);
+color:#ff2a2a;
 
 }
 
 .label{
 
-color:#777;
-font-size:16px;
+color:#aa0000;
 
 }
 
@@ -84,15 +73,17 @@ font-size:16px;
 
 .tick{
 
-animation:pop 0.3s;
+animation:shake 0.3s;
 
 }
 
-@keyframes pop{
+@keyframes shake{
 
-0%{transform:scale(1);}
-50%{transform:scale(1.3);}
-100%{transform:scale(1);}
+0%{transform:translateX(0);}
+25%{transform:translateX(-2px);}
+50%{transform:translateX(2px);}
+75%{transform:translateX(-2px);}
+100%{transform:translateX(0);}
 
 }
 
@@ -103,7 +94,7 @@ animation:pop 0.3s;
 width:80%;
 max-width:350px;
 height:20px;
-background:#ffd0e8;
+background:#220000;
 border-radius:20px;
 margin:30px auto;
 overflow:hidden;
@@ -114,42 +105,50 @@ overflow:hidden;
 
 height:100%;
 width:0%;
-background:var(--progress);
+background:linear-gradient(90deg,#ff0000,#8b0000);
 
 }
 
 .percent{
 
-color:var(--text);
 font-weight:bold;
+margin-top:5px;
 
 }
 
-/* 櫻花 */
+/* 血滴 */
 
-.sakura{
+.blood{
 
 position:fixed;
-top:-10px;
-color:#ff9bd1;
+top:-20px;
 font-size:20px;
-animation:fall linear infinite;
+animation:drop linear infinite;
 
 }
 
-@keyframes fall{
+@keyframes drop{
 
-0%{
-transform:translateY(-10px) rotate(0deg);
-}
-
-100%{
-transform:translateY(110vh) rotate(360deg);
-}
+0%{transform:translateY(-20px);}
+100%{transform:translateY(110vh);}
 
 }
 
-/* 手機優化 */
+/* 按鈕 */
+
+button{
+
+margin-top:10px;
+padding:8px 15px;
+background:#8b0000;
+color:white;
+border:none;
+border-radius:5px;
+cursor:pointer;
+
+}
+
+/* 手機 */
 
 @media (max-width:480px){
 
@@ -166,9 +165,9 @@ h1{font-size:28px;}
 
 <body>
 
-<h1>🌸 2026 一中科學班倒數 🌸</h1>
+<h1>🩸 2026 科學班倒數 🩸</h1>
 
-<button onclick="toggleDark()">🌙 夜間模式</button>
+<button onclick="toggleDark()">🌙 切換模式</button>
 
 <div class="grid">
 
@@ -202,10 +201,10 @@ h1{font-size:28px;}
 
 <script>
 
-/* 倒數時間 */
+/* 日期 */
 
 var start = new Date("2025-09-01").getTime();
-var target = new Date("2026-04-01 08:00:00").getTime();
+var target = new Date("2026-03-14 08:00:00").getTime();
 
 setInterval(function(){
 
@@ -221,13 +220,14 @@ document.getElementById("days").innerHTML = days;
 document.getElementById("hours").innerHTML = hours;
 document.getElementById("minutes").innerHTML = minutes;
 
-var secElement = document.getElementById("seconds");
-secElement.innerHTML = seconds;
-secElement.classList.add("tick");
+var sec = document.getElementById("seconds");
 
-setTimeout(()=>secElement.classList.remove("tick"),300);
+sec.innerHTML = seconds;
+sec.classList.add("tick");
 
-/* 進度條 */
+setTimeout(()=>sec.classList.remove("tick"),300);
+
+/* 進度 */
 
 var progress = ((now-start)/(target-start))*100;
 
@@ -235,40 +235,37 @@ if(progress<0) progress=0;
 if(progress>100) progress=100;
 
 document.getElementById("progress").style.width = progress + "%";
-document.getElementById("percent").innerHTML = progress.toFixed(1) + "%";
+document.getElementById("percent").innerHTML = progress.toFixed(1)+"%";
 
 },1000);
 
+/* 血滴 */
 
-/* 夜間模式 */
+function createBlood(){
+
+var blood = document.createElement("div");
+
+blood.classList.add("blood");
+
+blood.innerHTML="🩸";
+
+blood.style.left=Math.random()*100+"vw";
+
+blood.style.animationDuration=(3+Math.random()*3)+"s";
+
+document.body.appendChild(blood);
+
+setTimeout(()=>blood.remove(),6000);
+
+}
+
+setInterval(createBlood,300);
 
 function toggleDark(){
 
 document.body.classList.toggle("dark");
 
 }
-
-/* 櫻花生成 */
-
-function createSakura(){
-
-var sakura = document.createElement("div");
-
-sakura.classList.add("sakura");
-
-sakura.innerHTML="🌸";
-
-sakura.style.left=Math.random()*100+"vw";
-
-sakura.style.animationDuration=(5+Math.random()*5)+"s";
-
-document.body.appendChild(sakura);
-
-setTimeout(()=>{sakura.remove()},10000);
-
-}
-
-setInterval(createSakura,400);
 
 </script>
 
